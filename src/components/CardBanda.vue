@@ -112,10 +112,7 @@
         <div class="col-md-4" v-for="(hs, index) in headerSholat" :key="hs.id">
           <center class="content-jadwal shadow">
             <h4>{{ hs.toLocaleUpperCase() }}</h4>
-            <!-- <h4 :id="'jam - ' + index" :style="text">
-              {{ jadwalSholat[index] }}
-            </h4> -->
-            <h4 :id="'jam - ' + index">
+            <h4 :id="'jam - ' + index" :style="text">
               {{ jadwalSholat[index] }}
             </h4>
           </center>
@@ -206,26 +203,18 @@
           class="col-md-3 mt-3 aqi-mobile-banda shadow"
           style="background-image: linear-gradient(to right, #54a0ff, #54a0ff)"
         >
-          <div class="row text-align-center">
-            <div class="col-sm-3 text-align-center">
-              <p style="height: 30px; font-size: 20px; color: white">Suhu</p>
-              <p style="font-weight: bold; font-size: 45px; color: white">
+          <div class="row">
+            <div class="col">
+              <p style="height: 30px; font-size: 50px; color: white">Suhu</p>
+              <p style="font-weight: bold; font-size: 70px; color: white">
                 {{ weather.tp }} C&deg;
               </p>
             </div>
-            <div class="col-sm-6 text-align-center">
-              <p style="height: 30px; font-size: 20px; color: white">Cuaca</p>
-              <img :src="bmkg.img" alt="" width="60" />
-              <p style="font-weight: bold; font-size: 25px; color: white">
-                <!-- CERAH BERAWAN -->
-                {{ bmkg.desc_weather.toLocaleUpperCase() }}
-              </p>
-            </div>
-            <div class="col-sm-3 text-align-center">
-              <p style="height: 30px; font-size: 20px; color: white">
+            <div class="col">
+              <p style="height: 30px; font-size: 50px; color: white">
                 Kelembaban
               </p>
-              <p style="font-weight: bold; font-size: 45px; color: white">
+              <p style="font-weight: bold; font-size: 70px; color: white">
                 <strong>{{ weather.hu }} %</strong>
               </p>
             </div>
@@ -370,7 +359,7 @@
 </template>
 
 <script>
-import { jdwSholat, airCondition, infoBmkg } from "../services/index";
+import { jdwSholat, airCondition } from "../services/index";
 
 export default {
   name: "CardBanda",
@@ -393,7 +382,6 @@ export default {
     pollution: {},
     weather: {},
     lhkpollinfo: {},
-    bmkg: {},
     note: "",
     img: "",
     bg: "",
@@ -415,7 +403,6 @@ export default {
     // console.log(this.minutes);
     this.getJadwalSholat();
     this.getAirCondition();
-    this.getDataBmkg();
     // this.getRes();
     setInterval(() => this.setTime(), 1000);
     setInterval(() => this.setTime2(), 5000);
@@ -472,8 +459,8 @@ export default {
         if (data < el2 + 0.75) {
           this.newHeaderSholat = this.headerSholat[index];
           this.newtimesholat = this.jadwalSholat[index] + " WIB";
-          // console.log(this.jadwalSholat[index]);
-          // console.log(this.headerSholat[index]);
+          console.log(this.jadwalSholat[index]);
+          console.log(this.headerSholat[index]);
           break;
         }
 
@@ -503,20 +490,6 @@ export default {
         nameDay = "Minggu ";
       }
       return nameDay;
-    },
-
-    getDataBmkg() {
-      infoBmkg(2)
-        .then((res) => {
-          // console.log(res);
-          if (res.status == 200 && res.statusText == "") {
-            this.bmkg = res.data.results[0];
-          } else {
-          }
-
-          console.log(this.bmkg);
-        })
-        .catch((err) => {});
     },
 
     getJadwalSholat() {
