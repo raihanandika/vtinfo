@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const urlSholat = "https://api.myquran.com/v1/sholat/jadwal/";
+// const urlSholat = "https://api.myquran.com/v1/sholat/jadwal/";
+const urlSholat = "https://ssam.suzuyagroup.com/api/sholat";
 const urlAir = "https://ssam.suzuyagroup.com/api/data/iqair";
 
 const urlIspuMedan =
@@ -23,16 +24,22 @@ const urlBmkg = "https://ssam.suzuyagroup.com/api/data/bmkg";
 // ispu medan = "https://ispu.menlhk.go.id/apimobile/v1/getDetail/stasiun/DLH_MEDAN_02";
 
 export async function infoBmkg(city) {
-  // console.log(urlSholat + date);
   const response = await axios.post(urlBmkg, {
     city: city,
   });
   return response;
 }
 
-export async function jdwSholat(date) {
-  // console.log(urlSholat + date);
-  const response = await axios.get(urlSholat + date);
+// export async function jdwSholat(date) {
+//   // console.log(urlSholat + date);
+//   const response = await axios.get(urlSholat + date);
+//   return response;
+// }
+
+export async function jdwSholat(id) {
+  const response = await axios.post(urlSholat, {
+    idkota: id,
+  });
   return response;
 }
 
@@ -40,6 +47,7 @@ export async function airCondition(city) {
   const response = await axios.post(urlAir, {
     city: city,
   });
+  // console.log(response);
   return response;
 }
 

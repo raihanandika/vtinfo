@@ -109,12 +109,20 @@
       <hr width="30%" />
 
       <div class="row">
-        <div class="col-md-4" v-for="(hs, index) in headerSholat" :key="hs.id">
+        <!-- <div class="col-md-4" v-for="(hs, index) in headerSholat" :key="hs.id">
           <center class="content-jadwal shadow">
             <h4>{{ hs.toLocaleUpperCase() }}</h4>
             <h4 :id="'jam - ' + index" :style="text">
               {{ jadwalSholat[index] }}
             </h4>
+          </center>
+        </div> -->
+        <div class="col-md-4" v-for="hs in headerSholat" :key="hs.id">
+          <center class="content-jadwal shadow">
+            <h4>{{ hs.toLocaleUpperCase() }}</h4>
+            <!-- <h4 :id="'jam - ' + index" :style="text">
+              {{ jadwalSholat[index] }}
+            </h4> -->
           </center>
         </div>
       </div>
@@ -169,7 +177,7 @@
               class="col"
               :style="lhk.bgket + ';border-radius: 15px;height: 145px;'"
             >
-              <div class="row">
+              <!-- <div class="row">
                 <div class="col" style="width: 100px">
                   <p style="font-size: 50px; margin-top: 40px">ISPU</p>
                 </div>
@@ -183,6 +191,33 @@
                     {{ lhk.ket }}
                   </p>
                 </div>
+              </div> -->
+              <!-- <div class="row" style="height: 90px">
+                <div class="col" style="width: 100px">
+                  <p style="font-size: 50px">ISPU</p>
+                </div>
+                <div class="col" style="width: 100px">
+                  <p style="font-size: 60px">
+                    <strong>{{ lhk.ispu }}</strong>
+                  </p>
+                </div>
+                <div class="col">
+                  <p style="font-size: 50px; height: 1px">
+                    {{ lhk.ket }}
+                  </p>
+                </div>
+              </div> -->
+              <div class="row">
+                <marquee-text :duration="150" :reverse="false" :repeat="1"
+                  ><span style="font-size: 18px; color: blue">
+                    data
+                  </span></marquee-text
+                >
+
+                <!-- <marquee-text>
+                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                  diam nonumy eirmod tempor invidunt ut labore et dolore magna.
+                </marquee-text> -->
               </div>
             </div>
           </div>
@@ -207,7 +242,7 @@
             <div class="col">
               <p style="height: 30px; font-size: 50px; color: white">Suhu</p>
               <p style="font-weight: bold; font-size: 70px; color: white">
-                {{ weather.tp }} C&deg;
+                {{ weather.temp }} C&deg;
               </p>
             </div>
             <div class="col">
@@ -215,7 +250,7 @@
                 Kelembaban
               </p>
               <p style="font-weight: bold; font-size: 70px; color: white">
-                <strong>{{ weather.hu }} %</strong>
+                <strong>{{ weather.humidity }} %</strong>
               </p>
             </div>
           </div>
@@ -360,10 +395,18 @@
 
 <script>
 import { jdwSholat, airCondition } from "../services/index";
+// import json from "../assets/jadwalsholat/bandaaceh/01.json";
+import json from "../../public/assets/jadwalsholat/bandaaceh/01.json";
+import MarqueeText from "vue-marquee-text-component";
+import DynamicMarquee from "vue-dynamic-marquee";
 
 export default {
   name: "CardBanda",
-  props: ["kota", "hari", "ymd", "sholat", "lhk"],
+  props: ["kota", "hari", "ymd", "sholat", "lhk", "lhkket"],
+  components: {
+    MarqueeText,
+    DynamicMarquee,
+  },
   data: () => ({
     show: true,
     jadwalSholat: [],
@@ -397,7 +440,12 @@ export default {
     newHeaderSholat: "",
     newtimesholat: "",
   }),
+  created() {
+    console.log(this.lhkket);
+  },
   mounted() {
+    console.log("card banda");
+
     // console.log("data");
     // console.log(this.hours);
     // console.log(this.minutes);
@@ -459,8 +507,8 @@ export default {
         if (data < el2 + 0.75) {
           this.newHeaderSholat = this.headerSholat[index];
           this.newtimesholat = this.jadwalSholat[index] + " WIB";
-          console.log(this.jadwalSholat[index]);
-          console.log(this.headerSholat[index]);
+          // console.log(this.jadwalSholat[index]);
+          // console.log(this.headerSholat[index]);
           break;
         }
 
@@ -469,7 +517,7 @@ export default {
         //   console.log(el1);
         // }
       }
-      console.log("=========================");
+      // console.log("=========================");
     },
     getDay(value) {
       let nameDay = "Senin, ";
@@ -493,20 +541,33 @@ export default {
     },
 
     getJadwalSholat() {
-      // console.log("data" + this.sholat);
-      jdwSholat(this.sholat)
+      // const today = new Date();
+      // const yyyy = today.getFullYear();
+      // let mm = today.getMonth() + 1; // Months start at 0!
+      // let dd = today.getDate();
+      // if (dd < 10) dd = "0" + dd;
+      // if (mm < 10) mm = "0" + mm;
+      // const formattedToday = yyyy + "-" + mm + "-" + dd;
+      // let obj = json.find((val) => val.tanggal === formattedToday);
+      // this.jadwalSholat.push(obj.shubuh);
+      // this.jadwalSholat.push(obj.terbit);
+      // this.jadwalSholat.push(obj.dzuhur);
+      // this.jadwalSholat.push(obj.ashr);
+      // this.jadwalSholat.push(obj.magrib);
+      // this.jadwalSholat.push(obj.isya);
+      jdwSholat(119)
         .then((res) => {
           // console.log(res);
           if (res.status == 200 && res.statusText == "") {
             // console.log(res.data.data.jadwal);
             // this.jadwalSholat.push(res.data.jadwal.imsak);
-            this.jadwalSholat.push(res.data.data.jadwal.subuh);
-            this.jadwalSholat.push(res.data.data.jadwal.terbit);
+            this.jadwalSholat.push(res.data.results[0].subuh);
+            this.jadwalSholat.push(res.data.results[0].terbit);
             // this.jadwalSholat.push(res.data.jadwal.dhuha);
-            this.jadwalSholat.push(res.data.data.jadwal.dzuhur);
-            this.jadwalSholat.push(res.data.data.jadwal.ashar);
-            this.jadwalSholat.push(res.data.data.jadwal.maghrib);
-            this.jadwalSholat.push(res.data.data.jadwal.isya);
+            this.jadwalSholat.push(res.data.results[0].dzuhur);
+            this.jadwalSholat.push(res.data.results[0].ashar);
+            this.jadwalSholat.push(res.data.results[0].magrib);
+            this.jadwalSholat.push(res.data.results[0].isya);
             // console.log(this.jadwalSholat);
           }
           // console.log(this.jadwalSholat);
@@ -519,9 +580,12 @@ export default {
     getAirCondition() {
       airCondition(this.kota)
         .then((res) => {
+          // console.log("Data");
+          // console.log(res);
           if (res.status == 200 && res.statusText == "") {
             this.pollution = res.data.results.current.pollution;
             this.weather = res.data.results.current.weather;
+            // console.log(this.weather);
             // this.getRes();
           } else {
           }

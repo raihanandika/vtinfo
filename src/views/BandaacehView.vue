@@ -15,6 +15,7 @@
       :ymd="ymd"
       :sholat="paramsSholat"
       :lhk="lhkinfo"
+      :lhkket="lhkketerangan"
     />
   </div>
 </template>
@@ -44,6 +45,7 @@ export default {
       new Date().getDate(),
     hari: new Date().getDay(),
     lhkinfo: {},
+    lhkketerangan: "data",
     ymd:
       new Date().getDate() +
       "-" +
@@ -75,14 +77,16 @@ export default {
 
   methods: {
     getlhk() {
-      // console.log(" Banda aceh load data");
       ispuaceh()
         .then((res) => {
+          // console.log(res.data.rows[0].kategori.keterangan);
           if (res.status == 200 && res.statusText == "OK") {
-            // console.log(res.data.rows);
+            // console.log(res.data.rows[0].kategori.keterangan);
             this.lhkinfo.ispu = parseInt(res.data.rows[0].val);
             this.lhkinfo.ket = res.data.rows[0].cat;
             this.lhkinfo.pm25 = res.data.rows[0].pm25;
+            this.lhkketerangan = res.data.rows[0].kategori.keterangan;
+            // console.log(this.lhkketerangan);
 
             if (
               parseInt(res.data.rows[0].val) >= 0 &&
@@ -118,7 +122,7 @@ export default {
               this.lhkinfo.img = "../assets/images/hazardouse.png";
             }
           }
-          // console.log(this.lhkinfo);
+          // console.log(this.lhkketerangan);
         })
         .catch((err) => {
           console.log(res);

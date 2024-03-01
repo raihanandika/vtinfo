@@ -188,7 +188,7 @@
             <div class="col">
               <p style="height: 3px">Kelembaban</p>
               <p style="font-weight: bold; font-size: 20px">
-                <strong>{{ weather.hu }} %</strong>
+                <strong>{{ weather.humidity }} %</strong>
               </p>
             </div>
           </div>

@@ -108,7 +108,10 @@
         <div class="col-md-4" v-for="(hs, index) in headerSholat" :key="hs.id">
           <center class="content-jadwal shadow">
             <h4>{{ hs.toLocaleUpperCase() }}</h4>
-            <h4 :id="'jam - ' + index" :style="text">
+            <!-- <h4 :id="'jam - ' + index" :style="text">
+              {{ jadwalSholat[index] }}
+            </h4> -->
+            <h4 :id="'jam - ' + index">
               {{ jadwalSholat[index] }}
             </h4>
           </center>
@@ -203,7 +206,7 @@
             <div class="col">
               <p style="height: 3px; font-size: 14px; color: white">Suhu</p>
               <p style="font-weight: bold; font-size: 22px; color: white">
-                {{ weather.tp }} C&deg;
+                {{ weather.temp }} C&deg;
               </p>
             </div>
             <div class="col">
@@ -211,7 +214,7 @@
                 Kelembaban
               </p>
               <p style="font-weight: bold; font-size: 22px; color: white">
-                <strong>{{ weather.hu }} %</strong>
+                <strong>{{ weather.humidity }} %</strong>
               </p>
             </div>
           </div>
@@ -354,6 +357,8 @@
 
 <script>
 import { jdwSholat, airCondition } from "../services/index";
+// import json from "../assets/jadwalsholat/medan/01.json";
+import json from "../../public/assets/jadwalsholat/medan/01.json";
 
 export default {
   name: "NewCard",
@@ -405,6 +410,7 @@ export default {
   methods: {
     setTime() {
       const date = new Date();
+
       let hours = date.getHours();
       let minutes = date.getMinutes();
       let seconds = date.getSeconds();
@@ -453,8 +459,8 @@ export default {
         if (data < el2 + 0.75) {
           this.newHeaderSholat = this.headerSholat[index];
           this.newtimesholat = this.jadwalSholat[index] + " WIB";
-          console.log(this.jadwalSholat[index]);
-          console.log(this.headerSholat[index]);
+          // console.log(this.jadwalSholat[index]);
+          // console.log(this.headerSholat[index]);
           break;
         }
 
@@ -488,19 +494,33 @@ export default {
 
     getJadwalSholat() {
       // console.log("data" + this.sholat);
-      jdwSholat(this.sholat)
+      // const today = new Date();
+      // const yyyy = today.getFullYear();
+      // let mm = today.getMonth() + 1; // Months start at 0!
+      // let dd = today.getDate();
+      // if (dd < 10) dd = "0" + dd;
+      // if (mm < 10) mm = "0" + mm;
+      // const formattedToday = yyyy + "-" + mm + "-" + dd;
+      // let obj = json.find((val) => val.tanggal === formattedToday);
+      // this.jadwalSholat.push(obj.shubuh);
+      // this.jadwalSholat.push(obj.terbit);
+      // this.jadwalSholat.push(obj.dzuhur);
+      // this.jadwalSholat.push(obj.ashr);
+      // this.jadwalSholat.push(obj.magrib);
+      // this.jadwalSholat.push(obj.isya);
+      jdwSholat(228)
         .then((res) => {
           // console.log(res);
           if (res.status == 200 && res.statusText == "") {
             // console.log(res.data.data.jadwal);
             // this.jadwalSholat.push(res.data.jadwal.imsak);
-            this.jadwalSholat.push(res.data.data.jadwal.subuh);
-            this.jadwalSholat.push(res.data.data.jadwal.terbit);
+            this.jadwalSholat.push(res.data.results[0].subuh);
+            this.jadwalSholat.push(res.data.results[0].terbit);
             // this.jadwalSholat.push(res.data.jadwal.dhuha);
-            this.jadwalSholat.push(res.data.data.jadwal.dzuhur);
-            this.jadwalSholat.push(res.data.data.jadwal.ashar);
-            this.jadwalSholat.push(res.data.data.jadwal.maghrib);
-            this.jadwalSholat.push(res.data.data.jadwal.isya);
+            this.jadwalSholat.push(res.data.results[0].dzuhur);
+            this.jadwalSholat.push(res.data.results[0].ashar);
+            this.jadwalSholat.push(res.data.results[0].magrib);
+            this.jadwalSholat.push(res.data.results[0].isya);
             // console.log(this.jadwalSholat);
           }
           // console.log(this.jadwalSholat);
@@ -513,10 +533,13 @@ export default {
     getAirCondition() {
       airCondition(this.kota)
         .then((res) => {
+          // console.log(res.data.results.current.pollution);
+          // console.log(res.data.results.current.weather);
           if (res.status == 200 && res.statusText == "") {
             this.pollution = res.data.results.current.pollution;
             this.weather = res.data.results.current.weather;
             // this.getRes();
+            // console.log(this.weather);
           } else {
           }
         })
@@ -551,6 +574,7 @@ export default {
       //   this.bg = "background-color:#a07682";
       //   this.img = "../assets/images/hazardouse.png";
       // }
+      // console.log(this.img);
       // console.log(this.city);
       // console.log(this.lhk);
       if (this.lhk.ispu >= 0 && this.lhk.ispu <= 50) {
